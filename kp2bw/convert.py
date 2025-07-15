@@ -89,6 +89,9 @@ class Converter():
             else:
                 custom_properties[key] = [value, 0]
 
+        if entry.otp: 
+            print(entry.otp)
+
         bw_item_object = self._create_bw_python_object(
             title = prefix + entry.title if entry.title else prefix + '_untitled',
             notes =  entry.notes if entry.notes and len(entry.notes) <= MAX_BW_ITEM_LENGTH else '',
@@ -100,7 +103,6 @@ class Converter():
             collectionId = self._bitwarden_coll_id,
             firstlevel = self._get_folder_firstlevel(entry)
         )
-
 
         # get attachments to store later on
         attachments = [(key, value) for key,value in entry.custom_properties.items() if value is not None and len(value) > MAX_BW_ITEM_LENGTH]
