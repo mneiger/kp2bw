@@ -90,7 +90,7 @@ class Converter():
                 custom_properties[key] = [value, 0]
 
         if entry.otp: 
-            print(entry.otp)
+            print(entry.title, "TOTP ",entry.otp,"\n")
 
         bw_item_object = self._create_bw_python_object(
             title = prefix + entry.title if entry.title else prefix + '_untitled',
