@@ -1,12 +1,11 @@
-Metadata-Version: 2.1
+Metadata-Version: 2.4
 Name: kp2bw
 Version: 1.1
 Summary: Imports and existing KeePass db with REF fields into Bitwarden,
 Home-page: https://github.zhaw.ch/jampe/kp2bw
 Author: Daniel Jampen
 Author-email: daniel@jampen.net
-License: UNKNOWN
-Platform: UNKNOWN
+Requires-Dist: pykeepass
 
 # KP2BW - KeePass 2.x to Bitwarden Converter
 
@@ -26,17 +25,6 @@ This tool helps to convert existing KeePass databases to Bitwarden accounts. It 
 * **Multi OS support**: Works on Windows, macOS, & Linux.
 
 ## Installation
-1) choose either one of the installation methods below
-
-### Install using the pre built whl file
-1) Make sure you've installed python 3 and pip on your system.
-1) Download the newest whl release from the releases
-1) Install kp2bw via pip:
-  ```
-  pip install kp2bw-1.1-py3-none-any.whl
-  ```
-
-### Install from source
 1) Make sure you've installed python 3 and pip on your system.
 1) Clone / download this repository and enter the directory.
 1) Create a new python venv and activate it
@@ -71,7 +59,7 @@ kp2bw passwords.kdbx
 
 The help text of the tool is listed below:
 ```
-usage: kp2bw [-h] [-kppw KP_PW] [-kpkf KP_KEYFILE] [-bwpw BW_PW] [-y] [-v] keepass_file
+usage: kp2bw [-h] [-kppw KP_PW] [-kpkf KP_KEYFILE] [-bwpw BW_PW] [-y] [-v] keepass_file [-import_tags tags1 tags2] 
 
 KeePass 2.x to Bitwarden converter by @jampe
 
@@ -83,6 +71,12 @@ optional arguments:
   -kppw KP_PW       KeePass db password
   -kpkf KP_KEYFILE  KeePass db key file
   -bwpw BW_PW       Bitwarden Password
+  -bworg BW_OrgId   Id of Organization to Upload Into
+  -bwcoll BW_CollId Id of Org-Collection, or 'auto' to use name from toplevel-folders
+  -import_tags      Only import items with tags
+  -path2name        Prepend folderpath of entries to each name
+  -path2nameskip PATH2NAMESKIP
+                    Skip first X folders for path2name (default: 1)
   -y                Skips the confirm bw installation question
   -v                Verbose output
 ```
@@ -97,6 +91,4 @@ DEBUG: -- Executing command: bw sync --session 'Invalid master password.'
 ```
 
 The solution is to encapsulate the master password in double quotes (when you're typing it in at the password prompt), then the bw unlock command will run successfully and sync will continue. Thanks @readysteadywhoa for reporting this and providing a solution!
-
-
 
