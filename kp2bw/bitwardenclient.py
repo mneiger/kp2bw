@@ -20,7 +20,6 @@ class BitwardenClient():
         self._orgId = orgId
 
         # login
-        s=logging.disabled
         logging.disable(logging.DEBUG)
         self._key = self._exec(f"bw unlock \"{password}\" --raw")
         logging.disable(logging.NOTSET)
