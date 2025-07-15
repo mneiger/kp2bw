@@ -91,6 +91,8 @@ class Converter():
 
         if entry.otp: 
             print(entry.title, "TOTP ",entry.otp,"\n")
+            if entry.otp[0:3]="key=":
+              entry.otp=entry.otp[4:]
 
         bw_item_object = self._create_bw_python_object(
             title = prefix + entry.title if entry.title else prefix + '_untitled',
