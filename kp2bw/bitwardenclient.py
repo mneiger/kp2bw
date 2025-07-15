@@ -21,10 +21,10 @@ class BitwardenClient():
 
         # login
         s=logging.disabled
-        logging.disable()
+        logging.disable(logging.DEBUG)
         self._key = self._exec(f"bw unlock \"{password}\" --raw")
-        if not s:
-            logging.enable()
+        logging.disable(logging.NOTSET)
+
         if "error" in self._key:
             raise Exception("Could not unlock the Bitwarden db. Is the Master Password correct and are bw cli tools set up correctly?")
 
