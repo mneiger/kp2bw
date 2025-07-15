@@ -89,12 +89,12 @@ class Converter():
             else:
                 custom_properties[key] = [value, 0]
 
+        # modification (nettoyage) des champs otp pour assurer que bw les comprends (supressiuon du prefix key=)
         if entry.otp: 
-            print(entry.title, "TOTP ",entry.otp,":",entry.otp[0:4],"\n")
+            # print(entry.title, "TOTP ",entry.otp,":",entry.otp[0:4],"\n")
             if entry.otp[0:4]=="key=":
                 entry.otp=entry.otp[4:]
-                print(entry.title, "TOTP ",entry.otp,"\n")
-
+                # print(entry.title, "TOTP ",entry.otp,"\n")
 
         bw_item_object = self._create_bw_python_object(
             title = prefix + entry.title if entry.title else prefix + '_untitled',
