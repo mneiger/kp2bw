@@ -90,8 +90,8 @@ class Converter():
                 custom_properties[key] = [value, 0]
 
         if entry.otp: 
-            print(entry.title, "TOTP ",entry.otp,":",entry.otp[0:3],"\n")
-            if entry.otp[0:3]=="key=":
+            print(entry.title, "TOTP ",entry.otp,":",entry.otp[0:4],"\n")
+            if entry.otp[0:4]=="key=":
                 entry.otp=entry.otp[4:]
                 print(entry.title, "TOTP ",entry.otp,"\n")
 
