@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 from itertools import islice
 
 from enum import Enum
@@ -31,7 +32,7 @@ class Converter():
         }
 
     def _create_bw_python_object(self, title, notes, url, totp, username, password, custom_properties, collectionId, firstlevel):
-        return {
+        bwo = {
             "organizationId": self._bitwarden_organization_id,
             "collectionIds": collectionId,
             "firstlevel": firstlevel,
@@ -43,7 +44,7 @@ class Converter():
             "fields":[{"name": key,"value": value[0],"type": value[1]} for key, value in custom_properties.items() if value[0] is not None and len(value[0]) <= MAX_BW_ITEM_LENGTH],
             "login": {
                 "uris":[
-                    {"match": None,"uri": url}
+                    {"match":  None,"uri": url}
                 ] if url else [],
                 "username": username,
                 "password":password,
@@ -54,6 +55,26 @@ class Converter():
             "card": None,
             "identity": None
         }
+        # Ajustements divers
+        # nettoyage du totp pour enlever "key="
+        if bwo["login"]["totp"]:
+            if bwo["login"]["totp"][0:4]=="key=":
+                bwo["login"]["totp"]=bwo["login"]["totp"][4:] 
+        if not url :
+            s=title.partition(' ')[0] # le premier mot, est il un domaine
+            if s.find(".",0)>0: # il y a un point dasn le 1er mot on suppose etre un nom de domain, 
+                print('title to url: ', title, ":", s)
+                bwo["login"]["uris"].append({"match":None,"uri":s})
+
+        # url supplementaires
+        # KP2A_URL ou URLxx ou URL_xx
+        # il pourrait y avoir un pb si on ajoute une meme url plusieur fois ?
+        for field in bwo["fields"]:
+            # if field["name"] in ("KP2A_URL"):
+            if re.search(r"^(KP2A_URL)|(URL_?[0-9]+)",field["name"]):
+                print(title," : ",field["name"],":",field["value"])
+                bwo["login"]["uris"].append({"match":None,"uri":field["value"]})
+        return bwo
 
     def _generate_folder_name(self, entry):
         if not entry.group.path or entry.group.path == "/":
@@ -88,13 +109,6 @@ class Converter():
                 custom_properties[key] = [value, 1]
             else:
                 custom_properties[key] = [value, 0]
-
-        # modification (nettoyage) des champs otp pour assurer que bw les comprends (supressiuon du prefix key=)
-        if entry.otp: 
-            # print(entry.title, "TOTP ",entry.otp,":",entry.otp[0:4],"\n")
-            if entry.otp[0:4]=="key=":
-                entry.otp=entry.otp[4:]
-                # print(entry.title, "TOTP ",entry.otp,"\n")
 
         bw_item_object = self._create_bw_python_object(
             title = prefix + entry.title if entry.title else prefix + '_untitled',
